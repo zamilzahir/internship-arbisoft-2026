@@ -1,34 +1,26 @@
 import os
-import requests
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
-API_KEY = os.getenv("OPENROUTER_API_KEY")
-API_URL = "https://openrouter.ai/api/v1/chat/completions"
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def chat(model, messages):
-    response = requests.post(
-        API_URL,
-        headers={
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        },
-        json={
-            "model": model,
-            "messages": messages
-        }
+    response = client.chat.completions.create(
+        model=model,
+        messages=messages
     )
-    return response.json()["choices"][0]["message"]["content"]
+    return response.choices[0].message.content
 
 def main():
-    print("CLI Chat App - OpenRouter")
+    print("CLI Chat App - Groq")
     print("Type 'quit' to exit, 'switch' to change model\n")
     
     models = [
-        "meta-llama/llama-3.3-70b-instruct:free",
-        "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
-        "meta-llama/llama-3.2-3b-instruct:free"
+        "llama-3.1-8b-instant",
+        "llama-3.3-70b-versatile",
+        "deepseek-r1-distill-llama-70b"
     ]
     
     print("Available models:")
@@ -57,13 +49,9 @@ def main():
             continue
         
         messages.append({"role": "user", "content": user_input})
-        
-        print("Assistant: ", end="", flush=True)
         response = chat(model, messages)
-        print(response)
-        
+        print(f"Assistant: {response}\n")
         messages.append({"role": "assistant", "content": response})
-        print()
 
 if __name__ == "__main__":
     main()
