@@ -1,0 +1,432 @@
+{
+  "tfidf": {
+    "easy_queries": {
+      "per_query": [
+        {
+          "query": "How many vacation days do employees get in their first two years?",
+          "expected_source": "leave_policy.pdf",
+          "retrieved_sources": [
+            "leave_policy.pdf",
+            "it_security_policy.pdf",
+            "remote_work_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.9376,
+            1.7474,
+            1.7806
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What is the password rotation requirement for IT security?",
+          "expected_source": "it_security_policy.pdf",
+          "retrieved_sources": [
+            "it_security_policy.pdf",
+            "it_security_policy.pdf",
+            "onboarding_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.434,
+            1.7101,
+            1.7559
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "How much is the home office stipend for remote employees?",
+          "expected_source": "remote_work_policy.pdf",
+          "retrieved_sources": [
+            "remote_work_policy.pdf",
+            "remote_work_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.0012,
+            1.5229,
+            1.8544
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What is the daily meal reimbursement limit for international travel?",
+          "expected_source": "expense_policy.pdf",
+          "retrieved_sources": [
+            "expense_policy.pdf",
+            "remote_work_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.1064,
+            1.8767,
+            2.0
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "How long is the new hire onboarding program?",
+          "expected_source": "onboarding_policy.pdf",
+          "retrieved_sources": [
+            "onboarding_policy.pdf",
+            "onboarding_policy.pdf",
+            "it_security_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.9272,
+            1.7577,
+            1.8231
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What happens if an employee fails two phishing simulations in a row?",
+          "expected_source": "it_security_policy.pdf",
+          "retrieved_sources": [
+            "it_security_policy.pdf",
+            "it_security_policy.pdf",
+            "expense_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.5361,
+            1.864,
+            1.8693
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "How many weeks of parental leave does the secondary caregiver get?",
+          "expected_source": "leave_policy.pdf",
+          "retrieved_sources": [
+            "leave_policy.pdf",
+            "leave_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.0423,
+            1.7172,
+            1.87
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What is the cap on client entertainment expenses without pre-approval?",
+          "expected_source": "expense_policy.pdf",
+          "retrieved_sources": [
+            "expense_policy.pdf",
+            "remote_work_policy.pdf",
+            "expense_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.2473,
+            1.9153,
+            1.9158
+          ],
+          "rank_of_correct": 1
+        }
+      ],
+      "metrics": {
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "hard_paraphrased_queries": {
+      "per_query": [
+        {
+          "query": "Do new employees get help paying for internet at home?",
+          "expected_source": "remote_work_policy.pdf",
+          "retrieved_sources": [
+            "onboarding_policy.pdf",
+            "remote_work_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.5015,
+            1.5407,
+            1.8544
+          ],
+          "rank_of_correct": 2
+        },
+        {
+          "query": "How many paid days off can I take if a close relative dies?",
+          "expected_source": "leave_policy.pdf",
+          "retrieved_sources": [
+            "leave_policy.pdf",
+            "it_security_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.1596,
+            1.5226,
+            1.547
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What happens to my database access if I don't renew it in time?",
+          "expected_source": "it_security_policy.pdf",
+          "retrieved_sources": [
+            "remote_work_policy.pdf",
+            "it_security_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.6212,
+            1.6471,
+            1.6508
+          ],
+          "rank_of_correct": 2
+        },
+        {
+          "query": "Am I allowed to fly business class on a short domestic trip?",
+          "expected_source": "expense_policy.pdf",
+          "retrieved_sources": [
+            "expense_policy.pdf",
+            "it_security_policy.pdf",
+            "expense_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.3377,
+            1.4972,
+            1.7515
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "Who do I get paired with when I first join the company?",
+          "expected_source": "onboarding_policy.pdf",
+          "retrieved_sources": [
+            "remote_work_policy.pdf",
+            "onboarding_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            1.4496,
+            1.7265,
+            2.0
+          ],
+          "rank_of_correct": 2
+        }
+      ],
+      "metrics": {
+        "precision_at_1": 0.4,
+        "precision_at_3": 1.0,
+        "mrr": 0.7
+      }
+    }
+  },
+  "lsa": {
+    "easy_queries": {
+      "per_query": [
+        {
+          "query": "How many vacation days do employees get in their first two years?",
+          "expected_source": "leave_policy.pdf",
+          "retrieved_sources": [
+            "leave_policy.pdf",
+            "remote_work_policy.pdf",
+            "it_security_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.1578,
+            0.3842,
+            0.5173
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What is the password rotation requirement for IT security?",
+          "expected_source": "it_security_policy.pdf",
+          "retrieved_sources": [
+            "it_security_policy.pdf",
+            "it_security_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.2777,
+            0.2972,
+            0.5719
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "How much is the home office stipend for remote employees?",
+          "expected_source": "remote_work_policy.pdf",
+          "retrieved_sources": [
+            "remote_work_policy.pdf",
+            "remote_work_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.1999,
+            0.2385,
+            0.5356
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What is the daily meal reimbursement limit for international travel?",
+          "expected_source": "expense_policy.pdf",
+          "retrieved_sources": [
+            "expense_policy.pdf",
+            "expense_policy.pdf",
+            "onboarding_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.3028,
+            0.5718,
+            0.6126
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "How long is the new hire onboarding program?",
+          "expected_source": "onboarding_policy.pdf",
+          "retrieved_sources": [
+            "onboarding_policy.pdf",
+            "onboarding_policy.pdf",
+            "it_security_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.1839,
+            0.4242,
+            0.7142
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What happens if an employee fails two phishing simulations in a row?",
+          "expected_source": "it_security_policy.pdf",
+          "retrieved_sources": [
+            "it_security_policy.pdf",
+            "it_security_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.3538,
+            0.3792,
+            0.5383
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "How many weeks of parental leave does the secondary caregiver get?",
+          "expected_source": "leave_policy.pdf",
+          "retrieved_sources": [
+            "leave_policy.pdf",
+            "leave_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.2331,
+            0.321,
+            0.3353
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What is the cap on client entertainment expenses without pre-approval?",
+          "expected_source": "expense_policy.pdf",
+          "retrieved_sources": [
+            "expense_policy.pdf",
+            "expense_policy.pdf",
+            "expense_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.3761,
+            0.5815,
+            0.5852
+          ],
+          "rank_of_correct": 1
+        }
+      ],
+      "metrics": {
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "hard_paraphrased_queries": {
+      "per_query": [
+        {
+          "query": "Do new employees get help paying for internet at home?",
+          "expected_source": "remote_work_policy.pdf",
+          "retrieved_sources": [
+            "remote_work_policy.pdf",
+            "onboarding_policy.pdf",
+            "remote_work_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.4358,
+            0.4692,
+            0.4955
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "How many paid days off can I take if a close relative dies?",
+          "expected_source": "leave_policy.pdf",
+          "retrieved_sources": [
+            "leave_policy.pdf",
+            "leave_policy.pdf",
+            "leave_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.2042,
+            0.2978,
+            0.302
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "What happens to my database access if I don't renew it in time?",
+          "expected_source": "it_security_policy.pdf",
+          "retrieved_sources": [
+            "it_security_policy.pdf",
+            "it_security_policy.pdf",
+            "remote_work_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.3417,
+            0.4427,
+            0.4459
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "Am I allowed to fly business class on a short domestic trip?",
+          "expected_source": "expense_policy.pdf",
+          "retrieved_sources": [
+            "expense_policy.pdf",
+            "expense_policy.pdf",
+            "onboarding_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.466,
+            0.4935,
+            0.547
+          ],
+          "rank_of_correct": 1
+        },
+        {
+          "query": "Who do I get paired with when I first join the company?",
+          "expected_source": "onboarding_policy.pdf",
+          "retrieved_sources": [
+            "remote_work_policy.pdf",
+            "remote_work_policy.pdf",
+            "onboarding_policy.pdf"
+          ],
+          "retrieved_distances": [
+            0.4335,
+            0.5423,
+            0.6064
+          ],
+          "rank_of_correct": 3
+        }
+      ],
+      "metrics": {
+        "precision_at_1": 0.8,
+        "precision_at_3": 1.0,
+        "mrr": 0.867
+      }
+    }
+  }
+}
