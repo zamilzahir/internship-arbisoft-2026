@@ -25,8 +25,11 @@ class PolicyFact(BaseModel):
     @field_validator("category")
     @classmethod
     def category_must_be_short(cls, v: str) -> str:
+        v = v.strip().lower()
+
         if len(v.split()) > 4:
             raise ValueError("category must be a short label (<=4 words), not a sentence")
+
         return v
 
     @field_validator("fact")
