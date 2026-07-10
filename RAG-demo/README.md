@@ -12,16 +12,34 @@
   separate ChromaDB collections, evaluates retrieval quality against a
   ground-truth query set, writes results to `outputs/`.
 - `src/rag.py` — the RAG demo: retrieval (ChromaDB + LSA, the model that won
-  the comparison) → grounded prompt → answer. Ships with an extractive
-  no-LLM-required answer backend by default, plus a stubbed-out `llm` backend
-  to plug in a real API call.
+  the comparison) → grounded prompt → answer.
+- `src/structured_output.py` — LLM → JSON → Pydantic validation pipeline,
+  with a retry loop for validation failures. Calls the Groq API
+  (Llama 3.3 70B).
 - `outputs/observations.md` — write-up of the embedding comparison results.
 - `outputs/embedding_comparison_results.json` — full per-query results.
 
-## How to run
+## Setup
+
+### 1. Install dependencies
 ```bash
 pip install -r requirements.txt
+```
 
+### 2. Configure your `.env` file
+Several scripts (notably `src/structured_output.py`) call the Groq API and
+require a `GROQ_API_KEY`. Create a `.env` file in the project root:
+
+```bash
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+Get a key from [console.groq.com](https://console.groq.com) if you don't
+already have one. The `.env` file is loaded automatically via `python-dotenv`
+— no need to export the variable manually.
+
+## How to run
+```bash
 # 1. Generate sample PDFs (skip if using your own PDFs in data/pdfs/)
 python3 src/generate_sample_pdfs.py
 
@@ -30,16 +48,15 @@ python3 src/embed_compare.py
 
 # 3. Run the RAG demo
 python3 src/rag.py
+
+# 4. Run the structured-output pipeline (requires GROQ_API_KEY)
+python3 src/structured_output.py
 ```
 
 ## Known limitation
-This sandbox has no network route to LLM APIs or model-hosting CDNs
-(HuggingFace, S3, GitHub release assets are all blocked — only pypi/npm/crates
-registries are reachable). Two consequences, both documented in code:
-1. The embedding comparison uses TF-IDF vs LSA rather than neural embedding
-   models like MiniLM/BGE — these were the best *real, distinct* embedding
-   techniques achievable with no external downloads.
-2. The RAG demo's generation step defaults to an extractive backend (returns
-   the most relevant retrieved passage) rather than calling an LLM. The
-   retrieval half of the pipeline is unaffected — swap in a real LLM client
-   in `src/rag.py::_generate_with_llm()` to complete the loop.
+This sandbox has no network route to model-hosting CDNs (HuggingFace, S3,
+GitHub release assets are all blocked — only pypi/npm/crates registries and
+the Groq API are reachable). One consequence, documented in code:
+- The embedding comparison uses TF-IDF vs LSA rather than neural embedding
+  models like MiniLM/BGE — these were the best *real, distinct* embedding
+  techniques achievable with no external downloads.
