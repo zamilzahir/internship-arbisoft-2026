@@ -27,6 +27,16 @@ TOP_K = 3
 
 
 def build_index():
+    """
+    Builds the ChromaDB collection from scratch on every call.
+
+    Note: this deletes and recreates the "rag_demo" collection each time
+    build_index() runs, rather than reusing an existing one. That's
+    intentional for this demo -- it keeps the index guaranteed fresh and in
+    sync with whatever's in data/pdfs/ -- but would be wasteful/expensive at
+    scale with a large corpus. For a production setup, consider checking
+    whether the collection already exists and is up to date before rebuilding.
+    """
     chunks = load_and_chunk_all()
     embedder = LsaEmbedder(n_components=8, max_features=2000)
     embedder.fit([c.text for c in chunks])
