@@ -66,6 +66,10 @@ def call_llm(prompt: str) -> str:
             {"role": "user", "content": prompt},
         ],
     )
+    if not response.choices:
+        raise RuntimeError(
+            "Groq API returned no choices — the response was empty or the request failed unexpectedly."
+        )
     return response.choices[0].message.content
 
 
@@ -165,11 +169,4 @@ if __name__ == "__main__":
     # Use the first chunk from 3 different documents as a small demo batch.
     seen_sources = set()
     demo_passages = []
-    for c in chunks:
-        if c.source not in seen_sources:
-            demo_passages.append((c.source, c.text))
-            seen_sources.add(c.source)
-        if len(demo_passages) >= 3:
-            break
-
-    run_pipeline(demo_passages)
+    for
