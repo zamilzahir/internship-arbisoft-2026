@@ -169,4 +169,11 @@ if __name__ == "__main__":
     # Use the first chunk from 3 different documents as a small demo batch.
     seen_sources = set()
     demo_passages = []
-    for
+    for c in chunks:
+        if c.source not in seen_sources:
+            demo_passages.append((c.source, c.text))
+            seen_sources.add(c.source)
+        if len(demo_passages) >= 3:
+            break
+
+    run_pipeline(demo_passages)
