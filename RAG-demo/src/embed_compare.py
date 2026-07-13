@@ -4,7 +4,7 @@ Task: Compare two embedding models and document retrieval quality.
 Indexes the same chunk set into two separate ChromaDB collections (one per
 embedding model), runs an identical set of test queries with known
 ground-truth source documents against both, and reports precision@1,
-precision@3, and MRR for each model.
+precision@3, recall@5, and MRR for each model.
 """
 import json
 from pathlib import Path
@@ -57,15 +57,27 @@ def build_collection(client, name: str, embedder, chunks):
     return collection
 
 
-def evaluate(collection, queries, k=3):
-    """Returns per-query results plus aggregate precision@1, precision@3, MRR."""
+def evaluate(collection, queries, k=3, recall_k=5):
+    """
+    Returns per-query results plus aggregate precision@1, precision@3,
+    recall@recall_k, and MRR.
+
+    Recall@recall_k checks whether the correct document was retrieved
+    anywhere within a wider top-N window (default N=5), which is a useful
+    complementary signal to precision@k: it captures whether the system
+    surfaces the right document at all, even if it isn't ranked in the
+    tightest top-k results.
+    """
     results = []
     hits_at_1 = 0
     hits_at_3 = 0
+    hits_at_recall_k = 0
     reciprocal_ranks = []
 
+    max_k = max(k, recall_k)
+
     for query, expected_source in queries:
-        res = collection.query(query_texts=[query], n_results=k)
+        res = collection.query(query_texts=[query], n_results=max_k)
         retrieved_sources = [m["source"] for m in res["metadatas"][0]]
         retrieved_distances = res["distances"][0]
 
@@ -79,13 +91,15 @@ def evaluate(collection, queries, k=3):
             hits_at_1 += 1
         if rank is not None and rank <= 3:
             hits_at_3 += 1
+        if rank is not None and rank <= recall_k:
+            hits_at_recall_k += 1
         reciprocal_ranks.append(1.0 / rank if rank else 0.0)
 
         results.append({
             "query": query,
             "expected_source": expected_source,
-            "retrieved_sources": retrieved_sources,
-            "retrieved_distances": [round(d, 4) for d in retrieved_distances],
+            "retrieved_sources": retrieved_sources[:k],
+            "retrieved_distances": [round(d, 4) for d in retrieved_distances[:k]],
             "rank_of_correct": rank,
         })
 
@@ -93,6 +107,7 @@ def evaluate(collection, queries, k=3):
     metrics = {
         "precision_at_1": round(hits_at_1 / n, 3),
         "precision_at_3": round(hits_at_3 / n, 3),
+        f"recall_at_{recall_k}": round(hits_at_recall_k / n, 3),
         "mrr": round(sum(reciprocal_ranks) / n, 3),
     }
     return results, metrics
@@ -117,11 +132,13 @@ def main():
 
         easy_results, easy_metrics = evaluate(collection, TEST_QUERIES, k=3)
         print(f"  [easy/lexical queries]   precision@1={easy_metrics['precision_at_1']}  "
-              f"precision@3={easy_metrics['precision_at_3']}  mrr={easy_metrics['mrr']}")
+              f"precision@3={easy_metrics['precision_at_3']}  recall@5={easy_metrics['recall_at_5']}  "
+              f"mrr={easy_metrics['mrr']}")
 
         hard_results, hard_metrics = evaluate(collection, HARD_PARAPHRASED_QUERIES, k=3)
         print(f"  [hard/paraphrased queries] precision@1={hard_metrics['precision_at_1']}  "
-              f"precision@3={hard_metrics['precision_at_3']}  mrr={hard_metrics['mrr']}\n")
+              f"precision@3={hard_metrics['precision_at_3']}  recall@5={hard_metrics['recall_at_5']}  "
+              f"mrr={hard_metrics['mrr']}\n")
 
         all_results[model_name] = {
             "easy_queries": {"per_query": easy_results, "metrics": easy_metrics},
