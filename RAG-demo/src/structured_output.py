@@ -15,6 +15,7 @@ rest of the pipeline (parsing/validation/save/retry) doesn't change.
 """
 import json
 import os
+import logging
 from pathlib import Path
 from pydantic import ValidationError
 from dotenv import load_dotenv
@@ -22,6 +23,9 @@ from dotenv import load_dotenv
 from schemas import PolicyFact
 
 load_dotenv()
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logger = logging.getLogger(__name__)
 
 OUTPUT_DIR = Path(__file__).parent.parent / "outputs"
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -79,12 +83,21 @@ def extract_fact(passage: str, source_name: str, max_retries: int = MAX_RETRIES)
     """
     The core pipeline: LLM -> JSON -> Pydantic validation -> (retry on failure) -> return.
     Raises ValidationError if still invalid after all retries.
+
+    Logs every retry attempt (with the validation error that triggered it) so
+    repeated LLM failures are visible for debugging, rather than being
+    silently retried.
     """
     prompt = f"Policy document: {source_name}\n\nPassage:\n{passage}\n\nExtract one fact as JSON."
     last_error = None
+    failed_attempts = []
 
     for attempt in range(max_retries + 1):
         if attempt > 0:
+            logger.warning(
+                f"[{source_name}] Retry attempt {attempt}/{max_retries} "
+                f"after validation failure: {last_error}"
+            )
             prompt = (
                 f"Your previous response failed validation with this error:\n{last_error}\n\n"
                 f"Please fix it and respond again with ONLY valid JSON for this passage:\n\n"
@@ -98,15 +111,25 @@ def extract_fact(passage: str, source_name: str, max_retries: int = MAX_RETRIES)
             data = json.loads(cleaned)
         except json.JSONDecodeError as e:
             last_error = f"Response was not valid JSON: {e}. Raw response: {cleaned[:200]}"
+            logger.warning(f"[{source_name}] Attempt {attempt}: JSON decode failed — {last_error}")
+            failed_attempts.append({"attempt": attempt, "error": last_error})
             continue
 
         try:
             fact = PolicyFact(**data)
+            if attempt > 0:
+                logger.info(f"[{source_name}] Succeeded on retry attempt {attempt}")
             return fact  # success
         except ValidationError as e:
             last_error = str(e)
+            logger.warning(f"[{source_name}] Attempt {attempt}: schema validation failed — {last_error}")
+            failed_attempts.append({"attempt": attempt, "error": last_error})
             continue
 
+    logger.error(
+        f"[{source_name}] Failed after {max_retries + 1} attempts. "
+        f"Full attempt history: {failed_attempts}"
+    )
     raise ValidationError.from_exception_data(
         "PolicyFact", [{"type": "value_error", "loc": (), "msg": f"Failed after {max_retries + 1} attempts. Last error: {last_error}", "input": None}]
     )
