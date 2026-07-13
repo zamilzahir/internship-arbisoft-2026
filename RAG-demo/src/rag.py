@@ -4,26 +4,35 @@ Task: Build a small RAG demo over a set of PDFs using ChromaDB.
 Pipeline: query -> embed -> retrieve top-k chunks from ChromaDB -> build a
 grounded prompt -> generate an answer.
 
-NOTE on the generation step: this sandbox has no route to any LLM API (no
-key configured, and model-hosting domains are network-blocked -- see
-embeddings.py for the same constraint on the embedding side). So `generate()`
-below ships with two interchangeable backends:
+Two interchangeable backends for the generation step:
 
-  - "extractive"  (default, works with zero setup): returns the most
-    relevant retrieved sentence(s) verbatim as the answer, with the source
-    cited. This is a legitimate, if unglamorous, RAG baseline.
-  - "llm"         (stub): drop your API call in `_generate_with_llm()` and
-    switch DEFAULT_BACKEND to "llm". The retrieval half of the pipeline
-    doesn't change at all.
+  - "extractive": returns the most relevant retrieved sentence(s) verbatim
+    as the answer, with the source cited. A legitimate, if unglamorous,
+    RAG baseline -- kept as a zero-setup fallback.
+  - "llm"        (default): sends the retrieved context to Groq via
+    call_llm() (from structured_output.py) and returns a generated answer.
+    A custom system instruction (RAG_SYSTEM_INSTRUCTION) is passed so the
+    model responds in plain language instead of the JSON format used by
+    structured_output.py's own pipeline. The prompt (build_prompt()) keeps
+    the model grounded: it's instructed to answer ONLY from the retrieved
+    context, and to say so explicitly if the context doesn't contain the
+    answer, rather than guessing.
 """
 from pathlib import Path
 import chromadb
 
 from ingest import load_and_chunk_all
 from embeddings import LsaEmbedder  # LSA won the embedding comparison -- see outputs/observations.md
+from structured_output import call_llm
 
-DEFAULT_BACKEND = "extractive"
+DEFAULT_BACKEND = "llm"
 TOP_K = 3
+
+RAG_SYSTEM_INSTRUCTION = (
+    "You are a helpful assistant that answers questions about company policy "
+    "documents using only the provided context. Respond in plain, natural "
+    "language sentences -- do not respond in JSON or any structured format."
+)
 
 
 def build_index():
@@ -36,9 +45,16 @@ def build_index():
     sync with whatever's in data/pdfs/ -- but would be wasteful/expensive at
     scale with a large corpus. For a production setup, consider checking
     whether the collection already exists and is up to date before rebuilding.
+
+    n_components=30: with too few latent dimensions, retrieval was
+    collapsing unrelated topics together (e.g. password-related questions
+    retrieving leave-policy or expense-policy content instead of IT
+    security content). Raising this gives LSA more room to represent each
+    topic distinctly. This value should stay in sync with the n_components
+    used in embed_compare.py.
     """
     chunks = load_and_chunk_all()
-    embedder = LsaEmbedder(n_components=8, max_features=2000)
+    embedder = LsaEmbedder(n_components=30, max_features=2000)
     embedder.fit([c.text for c in chunks])
 
     client = chromadb.Client()
@@ -82,30 +98,25 @@ def _generate_extractive(query: str, hits: list[dict]) -> str:
     return f"(from {best['source']}): {best['text']}"
 
 
-def _generate_with_llm(prompt: str) -> str:
+def _generate_with_llm(query: str, hits: list[dict]) -> str:
     """
-    Plug a real LLM call in here, e.g.:
-
-        import anthropic
-        client = anthropic.Anthropic(api_key=...)
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=300,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return msg.content[0].text
-
-    Left unimplemented because this sandbox has no API key / no network route
-    to an LLM provider.
+    Sends the retrieved context to Groq via call_llm() and returns a
+    generated answer in plain language (via RAG_SYSTEM_INSTRUCTION). The
+    prompt (build_prompt) keeps the model grounded: it's instructed to
+    answer only from the retrieved context, and to say so explicitly if the
+    context doesn't contain the answer.
     """
-    raise NotImplementedError("Wire up an LLM client here to use backend='llm'.")
+    if not hits:
+        return "No relevant context was retrieved for this question."
+    prompt = build_prompt(query, hits)
+    return call_llm(prompt, system_instruction=RAG_SYSTEM_INSTRUCTION)
 
 
 def generate(query: str, hits: list[dict], backend: str = DEFAULT_BACKEND) -> str:
     if backend == "extractive":
         return _generate_extractive(query, hits)
     elif backend == "llm":
-        return _generate_with_llm(build_prompt(query, hits))
+        return _generate_with_llm(query, hits)
     else:
         raise ValueError(f"Unknown backend: {backend}")
 
@@ -127,8 +138,23 @@ if __name__ == "__main__":
         "How far in advance must client entertainment expenses be approved?",
     ]
 
+    print("Running demo questions:\n")
     for q in demo_questions:
         result = ask(collection, q)
         print(f"Q: {result['query']}")
         print(f"A: {result['answer']}")
         print(f"   (retrieved from: {[h['source'] for h in result['hits']]})\n")
+
+    print("=" * 70)
+    print("Now try your own question (type 'quit' to exit)")
+    print("=" * 70)
+    while True:
+        user_question = input("\nYour question: ").strip()
+        if user_question.lower() in ("quit", "exit", "q"):
+            print("Goodbye.")
+            break
+        if not user_question:
+            continue
+        result = ask(collection, user_question)
+        print(f"A: {result['answer']}")
+        print(f"   (retrieved from: {[h['source'] for h in result['hits']]})")

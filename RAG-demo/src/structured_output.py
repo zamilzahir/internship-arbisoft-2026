@@ -56,13 +56,20 @@ def _get_client():
     return Groq(api_key=api_key)
 
 
-def call_llm(prompt: str) -> str:
-    """Sends a prompt to Groq (Llama 3.3 70B), returns the raw text response."""
+def call_llm(prompt: str, system_instruction: str = SYSTEM_INSTRUCTION) -> str:
+    """
+    Sends a prompt to Groq (Llama 3.3 70B), returns the raw text response.
+
+    system_instruction defaults to this module's JSON-extraction instruction
+    (SYSTEM_INSTRUCTION) so existing callers in this file are unaffected.
+    Other modules reusing this function (e.g. rag.py) can pass their own
+    system_instruction to get plain-language answers instead of JSON.
+    """
     client = _get_client()
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[
-            {"role": "system", "content": SYSTEM_INSTRUCTION},
+            {"role": "system", "content": system_instruction},
             {"role": "user", "content": prompt},
         ],
     )
