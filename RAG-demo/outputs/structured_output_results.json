@@ -1,0 +1,35 @@
+[
+  {
+    "status": "success",
+    "source": "expense_policy.pdf",
+    "data": {
+      "policy_name": "expense_policy.pdf",
+      "category": "Meal reimbursement",
+      "fact": "Meal reimbursement is capped at $75 per day for domestic travel.",
+      "key_number": 75.0,
+      "source_grounded": true
+    }
+  },
+  {
+    "status": "success",
+    "source": "it_security_policy.pdf",
+    "data": {
+      "policy_name": "IT Security Policy",
+      "category": "Incident Reporting",
+      "fact": "Any lost or stolen device must be reported to IT Security within 1 hour of discovery.",
+      "key_number": 1.0,
+      "source_grounded": true
+    }
+  },
+  {
+    "status": "success",
+    "source": "leave_policy.pdf",
+    "data": {
+      "policy_name": "leave_policy.pdf",
+      "category": "Sick Leave Cap",
+      "fact": "Sick leave is capped at 10 days per calendar year.",
+      "key_number": 10.0,
+      "source_grounded": true
+    }
+  }
+]
