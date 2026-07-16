@@ -1,0 +1,35 @@
+{"id": "f2cd1509", "t": 0.7471, "agent": "mcp_client", "event": "connected", "name": "/Users/zamil/Downloads/mcp-agent-system/server/mcp_server.py", "payload": {}}
+{"id": "c5f86424", "t": 0.7511, "agent": "supervisor", "event": "routing_start", "name": "route", "payload": {"task": "Add a note: schedule the client demo for Thursday at 3pm."}}
+{"id": "7b9966c3", "t": 0.7513, "agent": "supervisor", "event": "routing_decision", "name": "route", "payload": {"task": "Add a note: schedule the client demo for Thursday at 3pm.", "worker": "notes"}}
+{"id": "472187ca", "t": 0.7513, "agent": "supervisor", "event": "delegate", "name": "notes", "payload": {"task": "Add a note: schedule the client demo for Thursday at 3pm."}}
+{"id": "5c75b376", "t": 0.7514, "agent": "notes_worker", "event": "worker_start", "name": "handle", "payload": {"task": "Add a note: schedule the client demo for Thursday at 3pm."}}
+{"id": "9b9badd2", "t": 0.7515, "agent": "notes_worker", "event": "tool_call_start", "name": "add_note", "payload": {"text": "schedule the client demo for Thursday at 3pm."}}
+{"id": "4328dc50", "t": 0.7537, "agent": "notes_worker", "event": "tool_call_end", "name": "add_note", "payload": {"result": "Note added (#3): schedule the client demo for Thursday at 3pm."}}
+{"id": "1339fd88", "t": 0.7538, "agent": "notes_worker", "event": "worker_done", "name": "handle", "payload": {"result": "Note added (#3): schedule the client demo for Thursday at 3pm."}}
+{"id": "0b6e4c07", "t": 0.7538, "agent": "supervisor", "event": "delegate_complete", "name": "notes", "payload": {"result": "Note added (#3): schedule the client demo for Thursday at 3pm."}}
+{"id": "0caa271e", "t": 0.7539, "agent": "supervisor", "event": "routing_start", "name": "route", "payload": {"task": "What is 42 * 17 + 8?"}}
+{"id": "6087d591", "t": 0.7539, "agent": "supervisor", "event": "routing_decision", "name": "route", "payload": {"task": "What is 42 * 17 + 8?", "worker": "math"}}
+{"id": "32f4b9c6", "t": 0.754, "agent": "supervisor", "event": "delegate", "name": "math", "payload": {"task": "What is 42 * 17 + 8?"}}
+{"id": "554f5a88", "t": 0.754, "agent": "math_worker", "event": "worker_start", "name": "handle", "payload": {"task": "What is 42 * 17 + 8?"}}
+{"id": "fe2f30bf", "t": 0.7541, "agent": "math_worker", "event": "tool_call_start", "name": "calculate", "payload": {"expr": "42*17+8"}}
+{"id": "ba8fb462", "t": 0.7542, "agent": "math_worker", "event": "tool_call_end", "name": "calculate", "payload": {"result": 722}}
+{"id": "ed3dab54", "t": 0.7542, "agent": "math_worker", "event": "worker_done", "name": "handle", "payload": {"result": "42*17+8 = 722"}}
+{"id": "02a5a638", "t": 0.7542, "agent": "supervisor", "event": "delegate_complete", "name": "math", "payload": {"result": "42*17+8 = 722"}}
+{"id": "5f80352f", "t": 0.7543, "agent": "supervisor", "event": "routing_start", "name": "route", "payload": {"task": "Please jot down that invoice #4521 was paid in full."}}
+{"id": "0faec508", "t": 0.7543, "agent": "supervisor", "event": "routing_decision", "name": "route", "payload": {"task": "Please jot down that invoice #4521 was paid in full.", "worker": "notes"}}
+{"id": "93c3ca73", "t": 0.7543, "agent": "supervisor", "event": "delegate", "name": "notes", "payload": {"task": "Please jot down that invoice #4521 was paid in full."}}
+{"id": "404b4c74", "t": 0.7544, "agent": "notes_worker", "event": "worker_start", "name": "handle", "payload": {"task": "Please jot down that invoice #4521 was paid in full."}}
+{"id": "afd38c14", "t": 0.7544, "agent": "notes_worker", "event": "tool_call_start", "name": "add_note", "payload": {"text": "invoice #4521 was paid in full."}}
+{"id": "863a8085", "t": 0.7564, "agent": "notes_worker", "event": "tool_call_end", "name": "add_note", "payload": {"result": "Note added (#4): invoice #4521 was paid in full."}}
+{"id": "f523a499", "t": 0.7565, "agent": "notes_worker", "event": "worker_done", "name": "handle", "payload": {"result": "Note added (#4): invoice #4521 was paid in full."}}
+{"id": "f4100fc9", "t": 0.7565, "agent": "supervisor", "event": "delegate_complete", "name": "notes", "payload": {"result": "Note added (#4): invoice #4521 was paid in full."}}
+{"id": "8e9b92f7", "t": 0.7566, "agent": "supervisor", "event": "routing_start", "name": "route", "payload": {"task": "Calculate 15% tip on a $86.40 bill."}}
+{"id": "2e1aa5e6", "t": 0.7567, "agent": "supervisor", "event": "routing_decision", "name": "route", "payload": {"task": "Calculate 15% tip on a $86.40 bill.", "worker": "math"}}
+{"id": "65674250", "t": 0.7567, "agent": "supervisor", "event": "delegate", "name": "math", "payload": {"task": "Calculate 15% tip on a $86.40 bill."}}
+{"id": "7169dfb5", "t": 0.7569, "agent": "math_worker", "event": "worker_start", "name": "handle", "payload": {"task": "Calculate 15% tip on a $86.40 bill."}}
+{"id": "995b5880", "t": 0.7572, "agent": "math_worker", "event": "tool_call_start", "name": "calculate", "payload": {"expr": "86.4 * 0.15"}}
+{"id": "214b59e3", "t": 0.7572, "agent": "math_worker", "event": "tool_call_end", "name": "calculate", "payload": {"result": 12.96}}
+{"id": "58c2591b", "t": 0.7573, "agent": "math_worker", "event": "worker_done", "name": "handle", "payload": {"result": "86.4 * 0.15 = 12.96"}}
+{"id": "ce7c0ff3", "t": 0.7573, "agent": "supervisor", "event": "delegate_complete", "name": "math", "payload": {"result": "86.4 * 0.15 = 12.96"}}
+{"id": "60a3317f", "t": 0.7574, "agent": "mcp_client", "event": "resource_read_start", "name": "kb://notes", "payload": {}}
+{"id": "2205fca4", "t": 0.7589, "agent": "mcp_client", "event": "resource_read_end", "name": "kb://notes", "payload": {"result": "1. Project kickoff meeting is scheduled for Monday.\n2. Remember to review the Q3 budget draft.\n3. schedule the client demo for Thursday at 3pm.\n4. invoice #4521 was paid in full."}}
