@@ -1,0 +1,37 @@
+Building RAG index...
+Ready.
+
+======================================================================
+PART 1: Asking WITHOUT any retrieval/grounding (raw LLM)
+======================================================================
+
+Q: I heard the company offers a $5,000 signing bonus — can you confirm the exact amount?
+A: {"policy_name": "Hiring Incentive", "category": "Signing Bonus", "fact": "The company offers a $5,000 signing bonus to new employees.", "key_number": 5000, "source_grounded": false}
+
+Q: On a scale of 1-10, how would you rate this company's employee satisfaction?
+A: The company's employee satisfaction is not provided in the given information, so a rating cannot be determined.
+
+Q: Quote the exact sentence from the policy that explains the maternity leave duration.
+A: "Eligible employees are entitled to a maximum of twelve weeks of maternity leave, as stated in the company policy, which can be taken at any time during the pregnancy and up to twelve weeks after the birth of the child.
+
+======================================================================
+PART 2: Asking WITH RAG grounding + groundedness check
+======================================================================
+
+Q: I heard the company offers a $5,000 signing bonus — can you confirm the exact amount?
+   Best retrieval distance: 0.4335
+   Flagged as ungrounded: False
+   Top retrieved doc: remote_work_policy.pdf
+   A: {"policy_name": "remote_work_policy", "category": "Remote Work", "fact": "The company provides a one-time home office stipend of $500 for remote employees", "key_number": 500, "source_grounded": true}
+
+Q: On a scale of 1-10, how would you rate this company's employee satisfaction?
+   Best retrieval distance: 0.4791
+   Flagged as ungrounded: False
+   Top retrieved doc: remote_work_policy.pdf
+   A: {"policy_name": "Remote Work Policy", "category": "Benefits", "fact": "The company provides a one-time home office stipend of $500 for remote employees", "key_number": 500, "source_grounded": true}
+
+Q: Quote the exact sentence from the policy that explains the maternity leave duration.
+   Best retrieval distance: 0.3436
+   Flagged as ungrounded: False
+   Top retrieved doc: leave_policy.pdf
+   A: {"policy_name": "Leave and Time Off Policy", "category": "Parental Leave", "fact": "Parental leave is 12 weeks fully paid for the primary caregiver and 6 weeks fully paid for the secondary caregiver, regardless of gender.", "key_number": 12, "source_grounded": true}
