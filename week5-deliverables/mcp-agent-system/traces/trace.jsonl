@@ -1,0 +1,17 @@
+{"id": "48906335", "t": 0.716, "agent": "mcp_client", "event": "connected", "name": "/Users/zamil/Desktop/week5-work/week5-deliverables/mcp-agent-system/server/mcp_server.py", "payload": {}}
+{"id": "77eabf45", "t": 17.0512, "agent": "supervisor", "event": "routing_start", "name": "route", "payload": {"task": "add notes get banana bread"}}
+{"id": "b6c9abec", "t": 17.0521, "agent": "supervisor", "event": "routing_decision", "name": "route", "payload": {"task": "add notes get banana bread", "worker": "notes"}}
+{"id": "c18dfe7f", "t": 17.0522, "agent": "supervisor", "event": "delegate", "name": "notes", "payload": {"task": "add notes get banana bread"}}
+{"id": "38c06af4", "t": 17.0523, "agent": "notes_worker", "event": "worker_start", "name": "handle", "payload": {"task": "add notes get banana bread"}}
+{"id": "9cf44c93", "t": 17.0525, "agent": "notes_worker", "event": "tool_call_start", "name": "add_note", "payload": {"text": "add notes get banana bread"}}
+{"id": "e3eeb5b7", "t": 17.0573, "agent": "notes_worker", "event": "tool_call_end", "name": "add_note", "payload": {"result": "Note added (#3): add notes get banana bread"}}
+{"id": "4b2b785a", "t": 17.0575, "agent": "notes_worker", "event": "worker_done", "name": "handle", "payload": {"result": "Note added (#3): add notes get banana bread"}}
+{"id": "601576d0", "t": 17.0576, "agent": "supervisor", "event": "delegate_complete", "name": "notes", "payload": {"result": "Note added (#3): add notes get banana bread"}}
+{"id": "992a762c", "t": 34.1378, "agent": "supervisor", "event": "routing_start", "name": "route", "payload": {"task": "calculatw 2+2"}}
+{"id": "c47de6f5", "t": 34.1396, "agent": "supervisor", "event": "routing_decision", "name": "route", "payload": {"task": "calculatw 2+2", "worker": "math"}}
+{"id": "636d143e", "t": 34.1403, "agent": "supervisor", "event": "delegate", "name": "math", "payload": {"task": "calculatw 2+2"}}
+{"id": "ce21f2c2", "t": 34.1407, "agent": "math_worker", "event": "worker_start", "name": "handle", "payload": {"task": "calculatw 2+2"}}
+{"id": "96b8d2e2", "t": 34.1413, "agent": "math_worker", "event": "tool_call_start", "name": "calculate", "payload": {"expr": "2+2"}}
+{"id": "ca9db176", "t": 34.1417, "agent": "math_worker", "event": "tool_call_end", "name": "calculate", "payload": {"result": 4}}
+{"id": "1e9191d5", "t": 34.1421, "agent": "math_worker", "event": "worker_done", "name": "handle", "payload": {"result": "2+2 = 4"}}
+{"id": "5579bd2e", "t": 34.1423, "agent": "supervisor", "event": "delegate_complete", "name": "math", "payload": {"result": "2+2 = 4"}}
