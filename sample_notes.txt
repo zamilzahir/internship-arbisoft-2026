@@ -1,0 +1,5 @@
+Project Aurora - internal notes
+Budget: $120,000 for Q3
+Lead: Priya Nair
+Target launch: September 2026
+Primary risk: dependency on the new vendor API, still in beta.
